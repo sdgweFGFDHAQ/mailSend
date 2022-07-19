@@ -12,6 +12,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.util.Objects;
 
 public class MailCreate {
 
@@ -27,35 +28,44 @@ public class MailCreate {
 
         //设置图片资源
         MimeBodyPart image = new MimeBodyPart();
-        String img = mail.getProp();
-        image.setDataHandler(new DataHandler(new FileDataSource(img)));
-        image.setContentID("img.png");//给图片设置一个ID，便于调用
-
-        //邮件内容:图片及文本
         MimeBodyPart text = new MimeBodyPart();
-        //cid就是ContentID的缩写，即这里调用的就是之前给图片设置的ID
-        text.setContent("<h1 style='color: red'>" + mail.getContent() + "</h1><img src='cid:img.png'>", "text/html;charset=UTF-8");
+        MimeMultipart multipart = new MimeMultipart();
+        if (mail.getImg() == null || Objects.equals(mail.getImg(), "")) {
+            image = null;
+            text.setContent(mail.getContent(), "text/html;charset=UTF-8");
+        } else{
+            String img = mail.getImg();
+            int imgIndex = img.lastIndexOf(".");
+            image.setDataHandler(new DataHandler(new FileDataSource(img)));
+            String imgSuffix = img.substring(imgIndex + 1);
+            image.setContentID("img." + imgSuffix);//给图片设置一个ID，便于调用
+
+            //邮件内容:图片及文本
+            //cid就是ContentID的缩写，即这里调用的就是之前给图片设置的ID
+            text.setContent("<h1 style='color: red'>" + mail.getContent() + "</h1><img src='cid:img." + imgSuffix + " '>", "text/html;charset=UTF-8");
+            multipart.addBodyPart(image);
+        }
+
+
 
         //附件
         MimeBodyPart prop = new MimeBodyPart();
-        if (mail.getProp() != null) {
+        if (mail.getProp() == null || Objects.equals(mail.getProp(), "")) {
+            prop = null;
+        } else {
             String file = mail.getProp();
             int fileIndex = file.lastIndexOf(".");
             prop.setDataHandler(new DataHandler(new FileDataSource(file)));
             String propSuffix = file.substring(fileIndex + 1);
             prop.setFileName(file.substring(file.lastIndexOf("\\") + 1, fileIndex) + "." + propSuffix);    //附件设置名字
-        } else {
-            prop = null;
+
         }
 
-
         //拼装文件正文内容
-        MimeMultipart multipart1 = new MimeMultipart();
-        multipart1.addBodyPart(image);
-        multipart1.addBodyPart(text);
-        multipart1.setSubType("related");
+        multipart.addBodyPart(text);
+        multipart.setSubType("related");
         MimeBodyPart contentText = new MimeBodyPart();
-        contentText.setContent(multipart1);
+        contentText.setContent(multipart);
 
         //拼接附件
         MimeMultipart allFile = new MimeMultipart();
