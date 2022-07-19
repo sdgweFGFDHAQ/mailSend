@@ -1,0 +1,134 @@
+{
+  "version": "1.0.0",
+  "versionnote": "开发版本",
+  "action": [
+    {
+      "resourcename": "获取邮箱服务器连接",
+      "resourcekey": "mailConnect",
+      "resourcetype": "2",
+      "accounttype": "mail_connection",
+      "uri": "com.xuanwu.ipaas.plugin.mail.spi.ConnectionFactory",
+      "descr": "获取QQ邮箱服务器连接",
+      "config": {
+        "input":
+        {},
+        "output":
+        {}
+      }
+    },
+    {
+      "resourcename": "发送邮件",
+      "resourcekey": "mailSend",
+      "resourcetype": "1",
+      "accounttype": "mail_connection",
+      "uri": "com.xuanwu.ipaas.plugin.mail.spi.MailSendAction",
+      "descr": "由管理员账号发送指定邮件",
+      "config": {
+        "input": {
+          "properties": [
+            {
+              "key": "fromAdd",
+              "title": "发件人",
+              "type": "paramselect",
+              "datatype": "String",
+              "required": "true"
+            },
+            {
+              "key": "toAdd",
+              "title": "收件人",
+              "type": "paramselect",
+              "datatype": "String",
+              "required": "true"
+            },
+            {
+              "key": "title",
+              "title": "邮件标题",
+              "type": "textinput",
+              "datatype": "String",
+              "required": "true"
+            },
+            {
+              "key": "content",
+              "title": "文本内容",
+              "type": "textinput",
+              "datatype": "String",
+              "required": "true"
+            },
+            {
+              "key": "img",
+              "title": "图片",
+              "type": "textinput",
+              "datatype": "String",
+              "required": "true"
+            },
+            {
+              "key": "prop",
+              "title": "附件",
+              "type": "textinput",
+              "datatype": "String",
+              "required": "true"
+            }
+          ]
+        },
+        "output": {
+          "properties": [
+            {
+              "key": "status",
+              "title": "状态",
+              "datatype": "Integer",
+              "type": "",
+              "defaultvalue": "",
+              "required": "",
+              "helptxt": ""
+            },
+            {
+              "key": "data",
+              "title": "返回结果",
+              "datatype": "Map",
+              "type": "",
+              "required": "",
+              "helptxt": "",
+              "properties": [
+                {
+                  "key": "resultData",
+                  "title": "查询结果",
+                  "datatype": "Map",
+                  "type": "",
+                  "required": "true",
+                  "helptxt": ""
+                }
+              ]
+            },
+            {
+              "key": "error",
+              "title": "错误输出",
+              "datatype": "Map",
+              "type": "",
+              "defaultvalue": "",
+              "required": "",
+              "helptxt": "",
+              "properties": [
+                {
+                  "key": "errorcode",
+                  "title": "错误编码",
+                  "datatype": "String",
+                  "type": "",
+                  "required": "",
+                  "helptxt": ""
+                },
+                {
+                  "key": "errormsg",
+                  "title": "错误信息",
+                  "datatype": "String",
+                  "type": "",
+                  "required": "",
+                  "helptxt": ""
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
